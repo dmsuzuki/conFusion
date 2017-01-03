@@ -8,8 +8,18 @@ angular.module('confusionApp')
         $scope.filtText = '';
         $scope.showDetails = false;
 
-        $scope.showMenu = true;
+        $scope.showMenu = false;
         $scope.message = "Loading ...";
+
+        menuFactory.getDishes().query(
+            function(response) {
+                $scope.dishes = response;
+                $scope.showMenu = true;
+            },
+            function(response) {
+                $scope.message = "Error: " + response.status + " " + response.statusText;
+            }
+        );
 
         $scope.dishes= menuFactory.getDishes().query();
 
@@ -72,14 +82,21 @@ angular.module('confusionApp')
 
     .controller('DishDetailController', ['$scope', '$stateParams', 'menuFactory', function($scope, $stateParams, menuFactory) {
 
-        $scope.showDish = true;
+        $scope.showDish = false;
         $scope.message = "Loading ...";
-
-        $scope.dish = menuFactory.getDishes().get({id:parseInt($stateParams.id,10)});
+        $scope.dish = menuFactory.getDishes().get({id:parseInt($stateParams.id,10)}).$promise.then(
+            function(response){
+                $scope.dish = response;
+                $scope.showDish = true;
+            },
+            function(response) {
+                $scope.message = "Error: " + response.status + " " + response.statusText;
+            }
+        );
 
     }])
 
-    .controller('DishCommentController', ['$scope', function($scope) {
+    .controller('DishCommentController', ['$scope', 'menuFactory', function($scope,menuFactory) {
 
         //Step 1: Create a JavaScript object to hold the comment from the form
         $scope.mycomment = {author:"", rating:5, comment:"", date:new Date().toISOString()};
@@ -92,6 +109,8 @@ angular.module('confusionApp')
 
             // Step 3: Push your comment into the dish's comment array
             $scope.dish.comments.push($scope.mycomment);
+
+            menuFactory.getDishes().update({id:$scope.dish.id},$scope.dish);
 
             //Step 4: reset your form to pristine
             $scope.commentForm.$setPristine();
@@ -106,10 +125,19 @@ angular.module('confusionApp')
 
         $scope.promotion = menuFactory.getPromotion(0);
         $scope.chef = corporateFactory.getLeader(3);
-        $scope.showDish = true;
+        $scope.showDish = false;
         $scope.message = "Loading ...";
 
-        $scope.featuredDish = menuFactory.getDishes().get({id:0});
+        $scope.featuredDish = menuFactory.getDishes().get({id:0}).$promise.then(
+            function(response){
+                $scope.featuredDish = response;
+                $scope.showDish = true;
+            },
+            function(response) {
+                $scope.message = "Error: " + response.status + " " + response.statusText;
+            }
+        );
+
 
     }])
 
