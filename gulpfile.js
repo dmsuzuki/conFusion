@@ -15,7 +15,7 @@ var gulp = require('gulp'),
     ngannotate = require('gulp-ng-annotate'),
     del = require('del');
 
-gulp.task('jshint', function() {
+gulp.task('jshint', function () {
     return gulp.src('app/scripts/**/*.js')
     .pipe(jshint())
     .pipe(jshint.reporter(stylish));
@@ -31,7 +31,7 @@ gulp.task('usemin',['jshint'], function () {
 });
 
 // Images
-gulp.task('imagemin', function() {
+gulp.task('imagemin', function () {
     return del(['dist/images']), gulp.src('app/images/**/*')
     .pipe(cache(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true })))
     .pipe(gulp.dest('dist/images'))
@@ -39,11 +39,11 @@ gulp.task('imagemin', function() {
 });
 
 // Clean
-gulp.task('clean', function() {
+gulp.task('clean', function () {
     return del(['dist']);
 });
 
-gulp.task('copyfonts', ['clean'], function() {
+gulp.task('copyfonts', ['clean'], function () {
     gulp.src('./bower_components/font-awesome/fonts/**/*.{ttf,woff,eof,svg}*')
     .pipe(gulp.dest('./dist/fonts'));
     gulp.src('./bower_components/bootstrap/dist/fonts/**/*.{ttf,woff,eof,svg}*')
@@ -51,7 +51,7 @@ gulp.task('copyfonts', ['clean'], function() {
 });
 
 // Watch
-gulp.task('watch', ['browser-sync'], function() {
+gulp.task('watch', ['browser-sync'], function () {
     // Watch .js files
     gulp.watch('{app/scripts/**/*.js,app/styles/**/*.css,app/**/*.html}', ['usemin']);
       // Watch image files
@@ -80,6 +80,6 @@ gulp.task('browser-sync', ['default'], function () {
 });
 
 // Default task
-gulp.task('default', ['clean'], function() {
+gulp.task('default', ['clean'], function () {
     gulp.start('usemin', 'imagemin','copyfonts');
 });

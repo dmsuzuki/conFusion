@@ -21,7 +21,7 @@ angular.module('confusionApp')
             }
         );
 
-        $scope.dishes= menuFactory.getDishes().query();
+        //$scope.dishes= menuFactory.getDishes().query();
 
         $scope.select = function(setTab) {
             $scope.tab = setTab;
@@ -73,7 +73,7 @@ angular.module('confusionApp')
             else {
                 $scope.invalidChannelSelection = false;
                 $scope.feedback = {mychannel:"", firstName:"", lastName:"", agree:false, email:"" };
-                $scope.feedback.mychannel="";
+                $scope.feedback.mychannel = "";
                 $scope.feedbackForm.$setPristine();
                 console.log($scope.feedback);
             }
@@ -123,8 +123,6 @@ angular.module('confusionApp')
     // implement the IndexController and AboutController here
     .controller('IndexController',['$scope', 'menuFactory', 'corporateFactory', function($scope, menuFactory, corporateFactory)  {
 
-        $scope.promotion = menuFactory.getPromotion(0);
-        $scope.chef = corporateFactory.getLeader(3);
         $scope.showDish = false;
         $scope.message = "Loading ...";
 
@@ -138,6 +136,8 @@ angular.module('confusionApp')
             }
         );
 
+        $scope.promotion = menuFactory.getPromotion(0);
+        $scope.chef = corporateFactory.getLeader(3);
 
     }])
 
