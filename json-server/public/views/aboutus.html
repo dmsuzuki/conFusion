@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" ng-controller="AboutController">
     <div class="row">
         <div class="col-xs-12">
            <ul class="breadcrumb">
@@ -51,31 +51,26 @@
 
 
     <div class="row row-content">
-        <div class="col-xs-12 col-sm-9" ng-controller="AboutController">
+        <div class="col-xs-12 col-sm-9">
             <h2>Corporate Leadership</h2>
 
-            <!-- TASK 2 to render the leadership data when it is correctly received, and error message otherwise.-->
-            <div ng-if="!showLeaders">
-                <h3>{{messageLeaders}}</h3>
-            </div>
-            <div ng-if="showLeaders">
-                <ul class="media-list tab-pane fade in active">
-                    <li class="media" ng-repeat="leader in leaders">
+            <!-- Implement the Corporate Leaders List here -->
+            <ul class="media-list" ng-repeat="leader in leaders">
+                <div class="col-xs-12 col-sm-9">
+                    <div class="media">
                         <div class="media-left media-middle">
-                            <img class="media-object img-thumbnail" ng-src={{leader.image}} alt="{{leader.name}}">
+                            <img class="media-object img-thumbnail" ng-src={{leader.image}} alt={{leader.name}}>
                         </div>
                         <div class="media-body">
-                            <h2 class="media-heading">{{leader.name}}
-                                <small>{{leader.designation}}</small>
-                                <span class="badge">{{leader.abbr}}</span>
-                            </h2>
+                            <h3 class="media-heading">{{leader.name}}
+                            <small>{{leader.designation}}</small></h3>
                             <p>{{leader.description}}</p>
                         </div>
-                    </li>
-                </ul>
-            </div>
+                    </div>
+                </div>
+            </ul>
         </div>
-        <div class="col-xs-12 col-sm-3">
+         <div class="col-xs-12 col-sm-3">
             <p style="padding:20px;"></p>
         </div>
     </div>

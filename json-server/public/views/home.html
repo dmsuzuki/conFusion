@@ -5,46 +5,35 @@
             <h3 align=center>Our Lipsmacking Culinary Creations</h3>
         </div>
 
+        <!-- Implement the Featured Dish Here -->
         <div class="col-xs-12 col-sm-9 col-sm-pull-3">
-            <div ng-if="!showDish">
-                <h3>{{messageDish}}</h3>
-            </div>
-
-            <div class="media" ng-if="showDish">
+            <div class="media">
                 <div class="media-left media-middle">
-                    <a ui-sref="app.dishdetails({id: dish.id})">
-                        <img class="media-object img-thumbnail" ng-src={{dish.image}} alt={{dish.name}}>
+                    <a ui-sref="app.dishdetails({id: featuredDish._id})">
+                        <img class="media-object img-thumbnail" ng-src={{featuredDish.image}} alt={{featuredDish.name}}>
                     </a>
                 </div>
                 <div class="media-body">
-                    <h2 class="media-heading">{{dish.name}}
-                        <span class="label label-danger label-xs">{{dish.label}}</span>
-                        <span class="badge">{{dish.price | currency}}</span>
+                    <h2 class="media-heading">{{featuredDish.name}}
+                        <span class="label label-danger label-xs">{{featuredDish.label}}</span>
+                        <span class="badge">{{featuredDish.price | currency}}</span>
                     </h2>
-                    <p>{{dish.description}}</p>
+                    <p>{{featuredDish.description}}</p>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- TASK 1 to render the promotion data when it is correctly received, and error message otherwise -->
     <div class="row row-content">
         <div class="col-xs-12 col-sm-3">
             <p style="padding:20px;"></p>
             <h3 align=center>This Month's Promotions</h3>
         </div>
 
+        <!-- Implement the Promotion Here -->
         <div class="col-xs-12 col-sm-9">
-            <div ng-if="!showPromo">
-                <h3>{{messagePromo}}</h3>
-            </div>
-            <div class="media" ng-if="showPromo">
-                <div class="media-left media-middle">
-                    <a href="">
-                        <img class="media-object img-thumbnail" ng-src={{promotion.image}} alt="{{promotion.name}}">
-                    </a>
-                </div>
+            <div class="media">
                 <div class="media-body">
                     <h2 class="media-heading">{{promotion.name}}
                         <span class="label label-danger label-xs">{{promotion.label}}</span>
@@ -52,9 +41,11 @@
                     </h2>
                     <p>{{promotion.description}}</p>
                 </div>
+                <div class="media-right media-middle">
+                    <img class="media-object img-thumbnail" ng-src={{promotion.image}} alt={{promotion.name}}>
+                </div>
             </div>
         </div>
-
     </div>
 
     <div class="row row-content">
@@ -63,12 +54,9 @@
             <h3 align=center>Meet our Culinary Specialists</h3>
         </div>
 
-        <!-- TASK 2 to render the leadership data when it is correctly received, and error message otherwise -->
+        <!-- Implement the Executive Chef Info Here -->
         <div class="col-xs-12 col-sm-9 col-sm-pull-3">
-            <div ng-if="!showChef">
-                <h3>{{messageChef}}</h3>
-            </div>
-            <div class="media" ng-if="showChef">
+            <div class="media">
                 <div class="media-left media-middle">
                     <a ui-sref="app.aboutus()">
                         <img class="media-object img-thumbnail" ng-src={{chef.image}} alt={{chef.name}}>
@@ -76,9 +64,7 @@
                 </div>
                 <div class="media-body">
                     <h2 class="media-heading">{{chef.name}}
-                        <small>{{chef.designation}}</small>
-                        <span class="badge">{{chef.abbr}}</span>
-                    </h2>
+                    <small>{{chef.designation}}</small></h2>
                     <p>{{chef.description}}</p>
                 </div>
             </div>

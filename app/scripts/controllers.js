@@ -7,9 +7,10 @@ angular.module('confusionApp')
         $scope.tab = 1;
         $scope.filtText = '';
         $scope.showDetails = false;
+        $scope.dishes = {};
 
         $scope.showMenu = false;
-        $scope.message = "Loading ...";
+        $scope.messageMenu = "Loading Menu...";
 
         menuFactory.getDishes().query(
             function(response) {
@@ -17,11 +18,9 @@ angular.module('confusionApp')
                 $scope.showMenu = true;
             },
             function(response) {
-                $scope.message = "Error: " + response.status + " " + response.statusText;
+                $scope.messageMenu = "Error Menu: " + response.status + " " + response.statusText;
             }
         );
-
-        //$scope.dishes= menuFactory.getDishes().query();
 
         $scope.select = function(setTab) {
             $scope.tab = setTab;
@@ -51,29 +50,30 @@ angular.module('confusionApp')
 
     .controller('ContactController', ['$scope', function($scope) {
 
-        $scope.feedback = {mychannel:"", firstName:"", lastName:"", agree:false, email:"" };
+        $scope.feedback = {firstname:"", lastname:"", email:"", tel:{areacode:"", number:""}, agree:false, mychannel:"", comments:""};
 
-        var channels = [{value:"tel", label:"Tel."}, {value:"Email",label:"Email"}];
+        var channels = [{value:"tel", label:"Tel."}, {value:"Email", label:"Email"}];
 
         $scope.channels = channels;
         $scope.invalidChannelSelection = false;
 
     }])
 
-    .controller('FeedbackController', ['$scope', function($scope) {
+    .controller('FeedbackController', ['$scope', "feedbackFactory", function ($scope, feedbackFactory) {
 
+        // TASK 3 to save the feedback information to the server
         $scope.sendFeedback = function() {
-
             console.log($scope.feedback);
 
-            if ($scope.feedback.agree && ($scope.feedback.mychannel == "")) {
+           if ($scope.feedback.agree && ($scope.feedback.mychannel === "")) {
                 $scope.invalidChannelSelection = true;
                 console.log('incorrect');
             }
             else {
+                feedbackFactory.postFeedback().save($scope.feedback);
                 $scope.invalidChannelSelection = false;
-                $scope.feedback = {mychannel:"", firstName:"", lastName:"", agree:false, email:"" };
-                $scope.feedback.mychannel = "";
+                $scope.feedback = {firstname:"", lastname:"", email:"", tel:{areacode:"", number:""}, agree:false, mychannel:"", comments:""};
+                alert("Thank you for your feedback!");
                 $scope.feedbackForm.$setPristine();
                 console.log($scope.feedback);
             }
@@ -84,14 +84,14 @@ angular.module('confusionApp')
 
         $scope.dish = {};
         $scope.showDish = false;
-        $scope.message = "Loading ...";
+        $scope.messageDetails = "Loading Details...";
         $scope.dish = menuFactory.getDishes().get({id:parseInt($stateParams.id,10)}).$promise.then(
             function(response){
                 $scope.dish = response;
                 $scope.showDish = true;
             },
             function(response) {
-                $scope.message = "Error: " + response.status + " " + response.statusText;
+                $scope.messageDetails = "Error Dish Details: " + response.status + " " + response.statusText;
             }
         );
 
@@ -99,33 +99,29 @@ angular.module('confusionApp')
 
     .controller('DishCommentController', ['$scope', 'menuFactory', function($scope,menuFactory) {
 
-        //Step 1: Create a JavaScript object to hold the comment from the form
         $scope.mycomment = {author:"", rating:5, comment:"", date:new Date().toISOString()};
 
         $scope.submitComment = function () {
-
-            //Step 2: This is how you record the date
             $scope.mycomment.date = new Date().toISOString();
             console.log($scope.mycomment);
 
-            // Step 3: Push your comment into the dish's comment array
             $scope.dish.comments.push($scope.mycomment);
-
             menuFactory.getDishes().update({id:$scope.dish.id},$scope.dish);
-
-            //Step 4: reset your form to pristine
             $scope.commentForm.$setPristine();
-
-            //Step 5: reset your JavaScript object that holds your comment
             $scope.mycomment = {author:"", rating:5, comment:"", date:new Date().toISOString()};
         };
     }])
 
-    // implement the IndexController and AboutController here
     .controller('IndexController',['$scope', 'menuFactory', 'corporateFactory', function($scope, menuFactory, corporateFactory)  {
 
         $scope.showDish = false;
-        $scope.message = "Loading ...";
+        $scope.messageDish = "Loading Dish...";
+
+        $scope.showPromo = false;
+        $scope.messagePromo = "Loading Promotion...";
+
+        $scope.showChef = false;
+        $scope.messageChef = "Loading Chef...";
 
         $scope.dish = menuFactory.getDishes().get({id:0}).$promise.then(
             function(response){
@@ -133,17 +129,48 @@ angular.module('confusionApp')
                 $scope.showDish = true;
             },
             function(response) {
-                $scope.message = "Error: " + response.status + " " + response.statusText;
+                $scope.messageDish = "Error Dish: " + response.status + " " + response.statusText;
             }
         );
 
-        $scope.promotion = menuFactory.getPromotion(0);
-        $scope.chef = corporateFactory.getLeader(3);
+        // TASK 1 to render the promotion data. You should handle the error condition appropriately
+        $scope.promotion = menuFactory.getPromotion().get({id:0}).$promise.then(
+            function(response){
+                $scope.promotion = response;
+                $scope.showPromo = true;
+            },
+            function(response) {
+                $scope.messagePromo = "Error Promotion: " + response.status + " " + response.statusText;
+            }
+        );
+
+        // TASK 2 to render the leadership data obtained from the server, and error condition should be handled
+        $scope.chef = corporateFactory.getLeaders().get({id:3}).$promise.then(
+            function(response){
+                $scope.chef = response;
+                $scope.showChef = true;
+            },
+            function(response) {
+                $scope.messageChef = "Error Chef: " + response.status + " " + response.statusText;
+            }
+        );
 
     }])
 
     .controller('AboutController', ['$scope', 'corporateFactory', function($scope, corporateFactory){
-        $scope.leaders = corporateFactory.getLeaders();
+        // TASK 2 to render the leadership data obtained from the server, and error condition should be handled
+        $scope.showLeaders = false;
+        $scope.messageLeaders = "Loading Leader...";
+        $scope.leaders = {};
+        corporateFactory.getLeaders().query(
+            function (response) {
+                $scope.leaders = response;
+                $scope.showLeaders = true;
+            },
+            function (response) {
+                $scope.messageLeaders = "Loading Leader Error: " + response.status + " " + response.statusText;
+            }
+        );
     }])
 
 ;
